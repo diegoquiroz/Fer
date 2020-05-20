@@ -30,8 +30,13 @@ class Corrector(object):
 		self.tree_root = Node(self.data[0])
 		for i in range(len(self.data)):
 			insert(self.tree_root, Node(self.data[i]))
+	
+	"""This function returns the candidates of corrections,
+	prioritizing the ones with 1 Levenshtein distance.
 
-
+	:Private:
+	:param word: the word to be corrected.
+	"""
 	def _candidates(self, word): 
 	    if self.__known([word]):
 	      return self.__known([word])
@@ -42,9 +47,24 @@ class Corrector(object):
 	    elif [word]:
 	      return [word]
 
+	"""This function returns the words that match with
+	the ones we know in the Tree.
+
+	:Private!:
+	:param words: hash map (set()) of the words we want
+	to know if matches.
+	:return: list of the words that match.
+	"""
 	def __known(self, words):
 	    return [w for w in words if search(self.tree_root,w)]
 
+	"""This function returns all the permutations with
+	Levenshtein distance of 1.
+
+	:Private!:
+	:param word: the word to correct.
+	:return: hash map (set()) of the permutations.
+	"""
 	def __d1_posibilities(self, word):
 	    word_length = len(word)
 	    splits = [(word[:i], word[i:]) for i in range(word_length+1)]
@@ -54,8 +74,15 @@ class Corrector(object):
 	    inserts = [L + c + R for L, R in splits for c in self.letters]
 	    return set(deletes + transposes + replaces + inserts)
 
+	"""This function returns all the permutations with
+	Levenshtein distance of 2.
+
+	:Private!:
+	:param word: the word to correct.
+	:return: hash map (set()) of the permutations.
+	"""
 	def __d2_posibilities(self, word): 
-	    return (e2 for e1 in self.__d1_posibilities(word) for e2 in self.__d1_posibilities(e1))
+	    return set(e2 for e1 in self.__d1_posibilities(word) for e2 in self.__d1_posibilities(e1))
 
 	"""This function returns the first candidate.
 	TODO: calculate this by relevance instead of
