@@ -42,7 +42,7 @@ class Corrector(object):
 	    elif [word]:
 	      return [word]
 
-	def __known(self, words): 
+	def __known(self, words):
 	    return [w for w in words if search(self.tree_root,w)]
 
 	def __d1_posibilities(self, word):
@@ -54,7 +54,7 @@ class Corrector(object):
 	    inserts = [L + c + R for L, R in splits for c in self.letters]
 	    return set(deletes + transposes + replaces + inserts)
 
-	def __2_posibilities(self, word): 
+	def __d2_posibilities(self, word): 
 	    return (e2 for e1 in self.__d1_posibilities(word) for e2 in self.__d1_posibilities(e1))
 
 	"""This function returns the first candidate.
